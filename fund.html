@@ -9,6 +9,38 @@
 		var BALANCED_MARKETPLACE_URI = "/v1/marketplaces/TEST-MP2DQsZLPAU4KzFUnvOKfFj0";
 		balanced.init(BALANCED_MARKETPLACE_URI);
 	</script>
+	<script>
+
+		// Get credit card data from form
+		function getCardData() {
+			var form = document.getElementById("payment_form");
+			return {
+				"name": form.name.value,
+				"card_number": form.card_number.value,
+				"expiration_month": form.expiration_month.value,
+				"expiration_year": form.expiration_year.value,
+				"security_code": form.security_code.value
+			};
+		}
+
+		// Charge credit card
+		function charge() {
+			// Tokenize card data using balanced
+			var cardData = getCardData();
+			balanced.card.create(cardData, function(response) {
+				// Error handling
+				if (response.status != 201) {
+					alert(response.error.description);
+					return;
+				}
+
+				// Submit form with Card URI
+				var form = document.getElementById("payment_form")
+				form.card_uri.value = response.data.uri;
+				form.submit();
+			})
+		}
+	</script>
 </head>
 <body>
 	<h1>Donation Page:</h1>
