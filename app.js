@@ -1,5 +1,7 @@
 // Global variables
 var CAMPAIGN_GOAL = 1000;
+var BALANCED_MARKETPLACE_URI = "/v1/marketplaces/TEST-MP2DQsZLPAU4KzFUnvOKfFj0";
+var BALANCED_API_KEY = "56bbfac6fb4211e28b45026ba7c1aba6";
 
 // Initialize Express app
 var express = require('express');
