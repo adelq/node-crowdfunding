@@ -19,12 +19,14 @@ console.log("App running on http://localhost:8080");
 
 // Serving homepage
 app.get("/", function(request, response) {
-	response.send(
-		"<link rel='stylesheet' type='text/css' href='/static/style.css'>" +
-		"<h1>Test Crowdfunding Campaign built on node.js</h1>" +
-		"<h2>??? raised out of $" + CAMPAIGN_GOAL.toFixed(2) + "</h2>" +
-		"<a href='/fund'>Fund now</a>"
-	);
+	q.fcall(_getTotalFunds).then(function(total) {
+		response.send(
+			"<link rel='stylesheet' type='text/css' href='/static/style.css'>" +
+			"<h1>Test Crowdfunding Campaign built on node.js</h1>" +
+			"<h2>$" + total.toFixed(2) + " raised out of $" + CAMPAIGN_GOAL.toFixed(2) + "</h2>" +
+			"<a href='/fund'>Fund now</a>"
+		);
+	});
 });
 
 app.get("/fund", function(request, response) {
@@ -112,6 +114,30 @@ function _recordDonation(donation) {
 
 			// Promise the donation that was saved
 			deferred.resolve(donation);
+
+			// Close database
+			db.close();
+		});
+	});
+	return deferred.promise;
+}
+
+// Get total donation funds
+function _getTotalFunds() {
+	// Promise result from database
+	var deferred = q.defer();
+	mongo.connect(MONGO_URI, function(err, db) {
+		if (err) { return deferred.reject(err); }
+
+		// Get amounts of all donations
+		db.collection('donations').find( {}, {amount:1} ).toArray(function(err, donations) {
+			if (err) { return deferred.reject(err); }
+
+			// Sum amount and resolve promise
+			var total = donations.reduce(function(previousValue, currentValue) {
+				return previousValue + currentValue.amount;
+			},0);
+			deferred.resolve(total);
 
 			// Close database
 			db.close();
