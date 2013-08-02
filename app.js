@@ -24,3 +24,13 @@ app.get("/", function(request, response) {
 app.get("/fund", function(request, response) {
 	response.sendfile("fund.html");
 });
+
+app.post("/pay/balanced", function(request, response) {
+	// Payment data
+	var card_uri = request.body.card_uri;
+	var amount = request.body.amount;
+	var name = request.body.name;
+
+	// URI placeholder
+	response.send("Your card URI is: " + request.body.card_uri);
+});
