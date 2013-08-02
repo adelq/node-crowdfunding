@@ -2,12 +2,14 @@
 var CAMPAIGN_GOAL = 1000;
 var BALANCED_MARKETPLACE_URI = "/v1/marketplaces/TEST-MP2DQsZLPAU4KzFUnvOKfFj0";
 var BALANCED_API_KEY = "56bbfac6fb4211e28b45026ba7c1aba6";
+var MONGO_URI = "mongodb://crowd:mozilla@ds037508.mongolab.com:37508/crowdfund-test";
 
 // Importing required node packages
 var express = require('express');
 var app = express();
 var q = require('q');
 var httpRequest = require('request');
+var mongo = require('mongodb').MongoClient;
 
 // Initialize Express app
 app.use("/static", express.static(__dirname + '/static'));
@@ -54,10 +56,7 @@ app.post("/pay/balanced", function(request, response) {
 			transaction: transaction
 		};
 
-		// TODO: Record transaction in database
-		return q.fcall(function() {
-			return donation;
-		});
+		return _recordDonation(donation);
 	}).then(function(donation) {
 		// Personalized Thank You page
 		response.send(
@@ -96,6 +95,27 @@ function _callBalanced(url, params) {
 		}
 
 		deferred.resolve(body);
+	});
+	return deferred.promise;
+}
+
+// Recording donations
+function _recordDonation(donation) {
+	// Promise to save to database
+	var deferred = q.defer();
+	mongo.connect(MONGO_URI, function(err, db) {
+		if (err) { return deferred.reject(err); }
+
+		// Insert donation
+		db.collection('donations').insert(donation, function(err) {
+			if (err) { return deferred.reject(err); }
+
+			// Promise the donation that was saved
+			deferred.resolve(donation);
+
+			// Close database
+			db.close();
+		});
 	});
 	return deferred.promise;
 }
