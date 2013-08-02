@@ -12,5 +12,19 @@
 </head>
 <body>
 	<h1>Donation Page:</h1>
+	<form action="pay/balanced" id="payment_form" method="POST">
+		Name: <input type="text" name="name" value="John" Smith="" /> <br>
+		Amount: <input type="text" name="amount" value="12.32" /> <br>
+		Card Number: <input type="text" name="card_number" value="4111 1111 1111 1111" /> <br>
+		Expiration Month: <input type="text" name="expiration_month" value="4" /> <br>
+		Expiration Year: <input type="text" name="expiration_year" value="2050" /> <br>
+		Security Code: <input type="text" name="security_code" value="123" /> <br>
+
+		<!-- Hidden inputs -->
+		<input type="hidden" name="card_uri" />
+	</form>
+	<button onclick="charge();">
+		Pay with Credit Card
+	</button>
 </body>
 </html>
