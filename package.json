@@ -1,0 +1,23 @@
+{
+  "name": "node-crowdfunding",
+  "version": "1.0.0",
+  "description": "A crowdfunding Node.js application for Studyr",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adelq/node-crowdfunding.git"
+  },
+  "keywords": [
+    "crowdfunding",
+    "education"
+  ],
+  "author": "Adel Qalieh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adelq/node-crowdfunding/issues"
+  },
+  "homepage": "https://github.com/adelq/node-crowdfunding"
+}
